@@ -6,7 +6,10 @@ namespace Assets.Script.Water
     {
         [SerializeField]
         private WorldScript WorldScript;
-        
 
+        void Update()
+        {
+            WorldScript.World.SetCameraPosition(transform.position);
+        }
     }
 }

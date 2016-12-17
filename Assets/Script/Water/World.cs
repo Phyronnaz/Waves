@@ -9,23 +9,34 @@ namespace Assets.Script.Water
     public class World
     {
         public readonly List<Chunk> Chunks;
-        Wave[] Waves;
+        public readonly GameObject gameObject;
 
-        public World(Vector2 position, int size, int maxDensity, int chunkSize, Material material)
+        private Wave[] Waves;
+        private AnimationCurve densityCurve;
+        private int maxResolution;
+        private int maxRenderDistance;
+
+        public World(Vector3 position, int size, int maxResolution, int chunkSize, int maxRenderDistance, AnimationCurve densityCurve, Material material)
         {
+            this.densityCurve = densityCurve;
+            this.maxResolution = maxResolution;
+            this.maxRenderDistance = maxRenderDistance;
             Waves = new Wave[0];
             Chunks = new List<Chunk>();
-            if (chunkSize * maxDensity > 250)
+            gameObject = new GameObject();
+            gameObject.transform.position = position;
+            gameObject.name = "Water";
+            if (maxResolution > 250)
             {
-                throw new Exception("Chunks too big");
+                throw new Exception("Chunks resolution too high");
             }
             else
             {
-                for (int i = 0; i <= size; i += chunkSize)
+                for (int i = 0; i < size; i += chunkSize)
                 {
-                    for (int j = 0; j <= size; j += chunkSize)
+                    for (int j = 0; j < size; j += chunkSize)
                     {
-                        Chunks.Add(new Chunk(chunkSize, maxDensity, position + new Vector2(i, j), material, this));
+                        Chunks.Add(new Chunk(chunkSize, maxResolution, new Vector2(i + position.x, j + position.z), material, this));
                     }
                 }
             }
@@ -84,7 +95,23 @@ namespace Assets.Script.Water
 
         public void SetCameraPosition(Vector3 position)
         {
-
+            foreach (var chunk in Chunks)
+            {
+                int resolution;
+                var d = Vector3.Distance(position, chunk.gameObject.transform.position) / maxRenderDistance;
+                if (d < 1)
+                {
+                    resolution = (int)(densityCurve.Evaluate(d) * maxResolution);
+                }
+                else
+                {
+                    resolution = 1;
+                }
+                if (Mathf.Abs(chunk.Resolution - resolution) > 10)
+                {
+                    chunk.SetResolution(resolution);
+                }
+            }
         }
     }
 }

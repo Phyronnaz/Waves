@@ -11,13 +11,17 @@ namespace Assets.Script.Water
         [SerializeField]
         private int Size = 100;
         [SerializeField]
-        private int Density = 10;
+        private int MaxResolution = 100;
         [SerializeField]
         private int ChunkSize = 25;
+        [SerializeField]
+        private int MaxRenderDistance = 100;
         [SerializeField]
         private int RefreshCount = 1;
         [SerializeField]
         private Material Material;
+        [SerializeField]
+        private AnimationCurve DensityCurve;
 
         public World World;
 
@@ -25,7 +29,7 @@ namespace Assets.Script.Water
 
         void Start()
         {
-            World = new World(transform.position, Size, Density, ChunkSize, Material);
+            World = new World(transform.position, Size, MaxResolution, ChunkSize, MaxRenderDistance, DensityCurve, Material);
             for (int i = 0; i < 100; i += 10)
             {
                 World.AddWave(10, 10, Vector2.one * i, 1, 1);
@@ -52,7 +56,7 @@ namespace Assets.Script.Water
                         var chunkScript = hit.transform.GetComponent<ChunkScript>();
                         if (chunkScript != null)
                         {
-                            chunkScript.World.AddWave(10, 10, chunkScript.GetHitPosition(hit.triangleIndex), 1, 1);
+                            chunkScript.World.AddWave(10, 10, chunkScript.GetHitPosition(hit.triangleIndex), 1, 0);
                         }
                     }
                 }
