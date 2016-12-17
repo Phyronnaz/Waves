@@ -4,8 +4,6 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Script.Water
 {
-    [RequireComponent(typeof(MeshFilter))]
-    [RequireComponent(typeof(MeshRenderer))]
     public class WorldScript : MonoBehaviour
     {
         [SerializeField]

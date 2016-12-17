@@ -97,20 +97,17 @@ namespace Assets.Script.Water
         {
             foreach (var chunk in Chunks)
             {
-                int resolution;
                 var d = Vector3.Distance(position, chunk.gameObject.transform.position) / maxRenderDistance;
                 if (d < 1)
                 {
-                    resolution = (int)(densityCurve.Evaluate(d) * maxResolution);
+                    var x = densityCurve.Evaluate(d);
+                    chunk.SetResolution((int)Mathf.Clamp(maxResolution / (int)Mathf.Pow(2, Mathf.Round(1 / (x + 0.00001f))), 1, maxResolution));
                 }
                 else
                 {
-                    resolution = 1;
+                    chunk.SetResolution(1);
                 }
-                if (Mathf.Abs(chunk.Resolution - resolution) > 10)
-                {
-                    chunk.SetResolution(resolution);
-                }
+
             }
         }
     }

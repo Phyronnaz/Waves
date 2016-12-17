@@ -17,6 +17,7 @@ namespace Assets.Script.Water
 
         public float Density { get { return (float)resolution / size; } }
         public float Resolution { get { return resolution; } }
+        public float Size { get { return size; } }
 
         public Chunk(int size, int resolution, Vector2 position, Material material, World world)
         {
