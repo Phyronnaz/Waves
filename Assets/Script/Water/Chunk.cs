@@ -25,6 +25,7 @@ namespace Assets.Script.Water
             this.size = size;
             World = world;
             mesh = new Mesh();
+            mesh.MarkDynamic();
             gameObject = new GameObject();
             gameObject.transform.position = new Vector3(Position.x, 0, Position.y);
             gameObject.transform.SetParent(World.gameObject.transform);
@@ -72,6 +73,7 @@ namespace Assets.Script.Water
                 mesh.Clear();
                 InitMesh();
                 meshCollider.sharedMesh = mesh;
+                UpdateHeights();
             }
         }
         public void Destroy()
